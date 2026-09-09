@@ -1,6 +1,51 @@
 <resources>
     <string name="app_name">Wear Activity Launcher</string>
-    <string name="clear_search">Clear search</string>
     <string name="contact_me_url">https://codefl0w.xyz/contact</string>
     <string name="donate_url">https://buymeacoffee.com/fl0w</string>
+
+    <string name="header_title_prefix">Wear Launcher by</string>
+    <string name="header_title_author">fl0w</string>
+    <string name="header_version">v%1$s</string>
+
+    <string name="search_hint">Search apps or activities</string>
+    <string name="clear_search">Clear search</string>
+
+    <string name="scanning_title">Scanning installed packages</string>
+    <string name="scanning_detail">This can take a moment.</string>
+
+    <string name="scan_failed_title">Scan failed</string>
+    <string name="nothing_matches_title">Nothing matches</string>
+    <string name="nothing_matches_detail_empty">No exported activities were found on this watch.</string>
+    <string name="nothing_matches_detail_search">Try a shorter search term.</string>
+    <string name="no_activities_match_title">No activities match</string>
+    <string name="no_activities_match_detail">Try a different search for this app.</string>
+
+    <string name="actions_divider">Actions</string>
+
+    <string name="action_rescan_label">Rescan packages</string>
+    <string name="action_rescan_secondary">Refresh installed activity list</string>
+    <string name="action_rescan_last_scan">Last scan %1$s</string>
+
+    <string name="action_contact_label">Contact Me</string>
+    <string name="action_contact_secondary">Open a contact link on your phone</string>
+
+    <string name="action_donate_label">Donate</string>
+    <string name="action_donate_secondary">Support the project on your phone</string>
+
+    <string name="toast_continue_on_phone">Continue on your phone.</string>
+    <string name="toast_unable_open_phone_link">Unable to open the phone link.</string>
+
+    <string name="toast_activity_not_available">Activity is no longer available.</string>
+    <string name="toast_permission_required">This activity requires a permission the watch app does not have.</string>
+    <string name="toast_unable_open_activity">Unable to open that activity.</string>
+
+    <string name="shortcut_not_supported">Pinned shortcuts are not supported by your launcher.</string>
+    <string name="shortcut_requested">Shortcut request sent to your home launcher.</string>
+    <string name="shortcut_failed">Unable to create a shortcut right now.</string>
+
+    <string name="app_activity_count">%1$d activities</string>
+    <string name="app_match_count">%1$d matches</string>
+    <string name="activity_detail_permission_suffix"> - needs permission</string>
+    <string name="summary_apps_activities">%1$d apps - %2$d activities%3$s</string>
+    <string name="summary_updated_suffix"> - updated %1$s</string>
 </resources>
