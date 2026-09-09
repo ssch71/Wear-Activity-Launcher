@@ -53,6 +53,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -207,6 +208,23 @@ private fun HomeScreen(
         )
     }
 
+    val nothingMatchesDetailEmpty = stringResource(R.string.nothing_matches_detail_empty)
+    val nothingMatchesDetailSearch = stringResource(R.string.nothing_matches_detail_search)
+    val noActivitiesMatchTitle = stringResource(R.string.no_activities_match_title)
+    val noActivitiesMatchDetail = stringResource(R.string.no_activities_match_detail)
+    val toastContinueOnPhone = stringResource(R.string.toast_continue_on_phone)
+    val toastUnableOpenPhoneLink = stringResource(R.string.toast_unable_open_phone_link)
+    val toastActivityNotAvailable = stringResource(R.string.toast_activity_not_available)
+    val toastPermissionRequired = stringResource(R.string.toast_permission_required)
+    val toastUnableOpenActivity = stringResource(R.string.toast_unable_open_activity)
+    val shortcutNotSupported = stringResource(R.string.shortcut_not_supported)
+    val shortcutRequested = stringResource(R.string.shortcut_requested)
+    val shortcutFailed = stringResource(R.string.shortcut_failed)
+    val summaryUpdatedSuffix = stringResource(R.string.summary_updated_suffix)
+    val summaryAppsActivities = stringResource(R.string.summary_apps_activities)
+    val actionRescanSecondary = stringResource(R.string.action_rescan_secondary)
+    val actionRescanLastScan = stringResource(R.string.action_rescan_last_scan)
+
     Scaffold(
         timeText = { TimeText() },
         vignette = { Vignette(vignettePosition = VignettePosition.TopAndBottom) },
@@ -228,9 +246,10 @@ private fun HomeScreen(
                 ) {
                     Text(
                         text = buildAnnotatedString {
-                            append("Wear Launcher by ")
+                            append(stringResource(R.string.header_title_prefix))
+                            append(" ")
                             pushStyle(SpanStyle(color = Color(0xFFFF8FF5)))
-                            append("fl0w")
+                            append(stringResource(R.string.header_title_author))
                             pop()
                         },
                         color = Color.White,
@@ -241,7 +260,7 @@ private fun HomeScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "v$versionName",
+                        text = stringResource(R.string.header_version, versionName),
                         color = Muted,
                         fontSize = 12.sp,
                         textAlign = TextAlign.Center,
@@ -258,6 +277,8 @@ private fun HomeScreen(
                             shownAppCount = filteredApps.size,
                             shownActivityCount = filteredActivityCount,
                             scanTime = uiState.lastUpdated,
+                            summaryTemplate = summaryAppsActivities,
+                            updatedSuffixTemplate = summaryUpdatedSuffix,
                         ),
                         color = Muted,
                         fontSize = 11.sp,
@@ -277,7 +298,7 @@ private fun HomeScreen(
                 uiState.errorMessage != null -> {
                     item {
                         MessageChip(
-                            title = "Scan failed",
+                            title = stringResource(R.string.scan_failed_title),
                             detail = uiState.errorMessage,
                         )
                     }
@@ -286,11 +307,11 @@ private fun HomeScreen(
                 filteredApps.isEmpty() -> {
                     item {
                         MessageChip(
-                            title = "Nothing matches",
+                            title = stringResource(R.string.nothing_matches_title),
                             detail = if (query.isBlank()) {
-                                "No exported activities were found on this watch."
+                                nothingMatchesDetailEmpty
                             } else {
-                                "Try a shorter search term."
+                                nothingMatchesDetailSearch
                             },
                         )
                     }
@@ -317,6 +338,9 @@ private fun HomeScreen(
                                             context = context,
                                             packageName = row.activity.packageName,
                                             className = row.activity.className,
+                                            notAvailableMessage = toastActivityNotAvailable,
+                                            permissionRequiredMessage = toastPermissionRequired,
+                                            unableToOpenMessage = toastUnableOpenActivity,
                                             onFailure = { message ->
                                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                                             },
@@ -327,6 +351,9 @@ private fun HomeScreen(
                                             context = context,
                                             appLabel = row.appLabel,
                                             activity = row.activity,
+                                            notSupportedMessage = shortcutNotSupported,
+                                            requestedMessage = shortcutRequested,
+                                            failedMessage = shortcutFailed,
                                             onMessage = { message ->
                                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                                             },
@@ -337,8 +364,10 @@ private fun HomeScreen(
 
                             is LauncherInlineMessageRow -> {
                                 MessageChip(
-                                    title = row.title,
-                                    detail = row.detail,
+                                    title = noActivitiesMatchTitle.takeIf { row.title.isNotBlank() }
+                                        ?: row.title,
+                                    detail = noActivitiesMatchDetail.takeIf { row.detail.isNotBlank() }
+                                        ?: row.detail,
                                 )
                             }
                         }
@@ -352,9 +381,10 @@ private fun HomeScreen(
 
             item {
                 ActionChip(
-                    label = "Rescan packages",
-                    secondary = uiState.lastUpdated.takeIf { it.isNotBlank() }?.let { "Last scan $it" }
-                        ?: "Refresh installed activity list",
+                    label = stringResource(R.string.action_rescan_label),
+                    secondary = uiState.lastUpdated.takeIf { it.isNotBlank() }
+                        ?.let { actionRescanLastScan.format(it) }
+                        ?: actionRescanSecondary,
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Refresh,
@@ -368,8 +398,8 @@ private fun HomeScreen(
 
             item {
                 ActionChip(
-                    label = "Contact Me",
-                    secondary = "Open a contact link on your phone",
+                    label = stringResource(R.string.action_contact_label),
+                    secondary = stringResource(R.string.action_contact_secondary),
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Email,
@@ -378,12 +408,12 @@ private fun HomeScreen(
                         )
                     },
                     onClick = {
-                        Toast.makeText(context, "Continue on your phone.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, toastContinueOnPhone, Toast.LENGTH_SHORT).show()
                         openPhoneContactLink(
                             context = context,
                             uri = context.getString(R.string.contact_me_url).toUri(),
                             onFailure = {
-                                Toast.makeText(context, "Unable to open the phone link.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, toastUnableOpenPhoneLink, Toast.LENGTH_SHORT).show()
                             },
                         )
                     },
@@ -392,8 +422,8 @@ private fun HomeScreen(
 
             item {
                 ActionChip(
-                    label = "Donate",
-                    secondary = "Support the project on your phone",
+                    label = stringResource(R.string.action_donate_label),
+                    secondary = stringResource(R.string.action_donate_secondary),
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Favorite,
@@ -402,12 +432,12 @@ private fun HomeScreen(
                         )
                     },
                     onClick = {
-                        Toast.makeText(context, "Continue on your phone.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, toastContinueOnPhone, Toast.LENGTH_SHORT).show()
                         openPhoneContactLink(
                             context = context,
                             uri = context.getString(R.string.donate_url).toUri(),
                             onFailure = {
-                                Toast.makeText(context, "Unable to open the phone link.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, toastUnableOpenPhoneLink, Toast.LENGTH_SHORT).show()
                             },
                         )
                     },
@@ -426,9 +456,9 @@ private fun AppChip(
 ) {
     val icon = rememberAppIcon(packageName = app.packageName)
     val secondaryText = if (visibleActivityCount == app.activityCount) {
-        "${app.activityCount} activities"
+        stringResource(R.string.app_activity_count, app.activityCount)
     } else {
-        "$visibleActivityCount matches"
+        stringResource(R.string.app_match_count, visibleActivityCount)
     }
 
     Chip(
@@ -481,12 +511,13 @@ private fun ActivityCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
+    val permissionSuffix = stringResource(R.string.activity_detail_permission_suffix)
     val detail = buildString {
         append(appLabel)
         append(" - ")
         append(activity.shortName)
         if (!activity.permission.isNullOrBlank()) {
-            append(" - needs permission")
+            append(permissionSuffix)
         }
     }
 
@@ -577,7 +608,7 @@ private fun ActionDivider() {
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            text = "Actions",
+            text = stringResource(R.string.actions_divider),
             color = Muted,
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
@@ -616,8 +647,8 @@ private fun LoadingChip() {
     Chip(
         modifier = Modifier.fillMaxWidth(),
         enabled = false,
-        label = { Text(text = "Scanning installed packages") },
-        secondaryLabel = { Text(text = "This can take a moment.") },
+        label = { Text(text = stringResource(R.string.scanning_title)) },
+        secondaryLabel = { Text(text = stringResource(R.string.scanning_detail)) },
         icon = {
             CircularProgressIndicator(
                 modifier = Modifier.size(18.dp),
@@ -635,6 +666,9 @@ private fun SearchField(
     query: String,
     onQueryChange: (String) -> Unit,
 ) {
+    val searchHint = stringResource(R.string.search_hint)
+    val clearSearchDescription = stringResource(R.string.clear_search)
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -669,7 +703,7 @@ private fun SearchField(
                     Box(contentAlignment = Alignment.CenterStart) {
                         if (query.isBlank()) {
                             Text(
-                                text = "Search apps or activities",
+                                text = searchHint,
                                 color = Muted,
                                 fontSize = 13.sp,
                                 maxLines = 1,
@@ -682,7 +716,7 @@ private fun SearchField(
             if (query.isNotBlank()) {
                 Icon(
                     imageVector = Icons.Default.Clear,
-                    contentDescription = "Clear search",
+                    contentDescription = clearSearchDescription,
                     tint = Muted,
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
@@ -754,8 +788,8 @@ private fun buildContentRows(
             if (visibleActivities.isEmpty()) {
                 rows += LauncherInlineMessageRow(
                     key = "message:${app.packageName}",
-                    title = "No activities match",
-                    detail = "Try a different search for this app.",
+                    title = "",
+                    detail = "",
                 )
             } else {
                 visibleActivities.forEach { activity ->
@@ -775,25 +809,32 @@ private fun summaryText(
     shownAppCount: Int,
     shownActivityCount: Int,
     scanTime: String,
+    summaryTemplate: String,
+    updatedSuffixTemplate: String,
 ): String {
-    val timestamp = scanTime.takeIf { it.isNotBlank() }?.let { " - updated $it" }.orEmpty()
-    return "$shownAppCount apps - $shownActivityCount activities$timestamp"
+    val timestamp = scanTime.takeIf { it.isNotBlank() }
+        ?.let { updatedSuffixTemplate.format(it) }
+        .orEmpty()
+    return summaryTemplate.format(shownAppCount, shownActivityCount, timestamp)
 }
 
 private fun launchActivity(
     context: Context,
     packageName: String,
     className: String,
+    notAvailableMessage: String,
+    permissionRequiredMessage: String,
+    unableToOpenMessage: String,
     onFailure: (String) -> Unit,
 ) {
     try {
         context.startActivity(activityLaunchIntent(packageName, className))
     } catch (_: ActivityNotFoundException) {
-        onFailure("Activity is no longer available.")
+        onFailure(notAvailableMessage)
     } catch (_: SecurityException) {
-        onFailure("This activity requires a permission the watch app does not have.")
+        onFailure(permissionRequiredMessage)
     } catch (_: Exception) {
-        onFailure("Unable to open that activity.")
+        onFailure(unableToOpenMessage)
     }
 }
 
@@ -801,10 +842,13 @@ private fun createPinnedShortcut(
     context: Context,
     appLabel: String,
     activity: LauncherActivity,
+    notSupportedMessage: String,
+    requestedMessage: String,
+    failedMessage: String,
     onMessage: (String) -> Unit,
 ) {
     if (!ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
-        onMessage("Pinned shortcuts are not supported by your launcher.")
+        onMessage(notSupportedMessage)
         return
     }
 
@@ -821,9 +865,9 @@ private fun createPinnedShortcut(
     val requested = ShortcutManagerCompat.requestPinShortcut(context, shortcut, null)
     onMessage(
         if (requested) {
-            "Shortcut request sent to your home launcher."
+            requestedMessage
         } else {
-            "Unable to create a shortcut right now."
+            failedMessage
         },
     )
 }
