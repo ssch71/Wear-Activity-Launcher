@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">Wear Activity Launcher</string>
+    <string name="contact_me_url">https://codefl0w.xyz/contact</string>
+    <string name="donate_url">https://buymeacoffee.com/fl0w</string>
+
+    <string name="header_title_prefix">Wear Launcher by</string>
+    <string name="header_title_author">fl0w</string>
+    <string name="header_version">v%1$s</string>
+
+    <string name="search_hint">앱 또는 액티비티 검색</string>
+    <string name="clear_search">검색 지우기</string>
+
+    <string name="scanning_title">설치된 패키지 스캔 중</string>
+    <string name="scanning_detail">잠시만 기다려 주세요.</string>
+
+    <string name="scan_failed_title">스캔 실패</string>
+    <string name="nothing_matches_title">일치하는 항목 없음</string>
+    <string name="nothing_matches_detail_empty">이 워치에서 실행 가능한 액티비티를 찾지 못했습니다.</string>
+    <string name="nothing_matches_detail_search">검색어를 짧게 입력해 보세요.</string>
+    <string name="no_activities_match_title">일치하는 액티비티 없음</string>
+    <string name="no_activities_match_detail">이 앱에 대해 다른 검색어를 시도해 보세요.</string>
+
+    <string name="actions_divider">작업</string>
+
+    <string name="action_rescan_label">패키지 다시 스캔</string>
+    <string name="action_rescan_secondary">설치된 액티비티 목록 새로고침</string>
+    <string name="action_rescan_last_scan">마지막 스캔 %1$s</string>
+
+    <string name="action_contact_label">문의하기</string>
+    <string name="action_contact_secondary">휴대폰에서 연락처 링크 열기</string>
+
+    <string name="action_donate_label">후원하기</string>
+    <string name="action_donate_secondary">휴대폰에서 프로젝트 후원하기</string>
+
+    <string name="toast_continue_on_phone">휴대폰에서 계속 진행하세요.</string>
+    <string name="toast_unable_open_phone_link">휴대폰 링크를 열 수 없습니다.</string>
+
+    <string name="toast_activity_not_available">더 이상 사용할 수 없는 액티비티입니다.</string>
+    <string name="toast_permission_required">이 액티비티는 워치 앱에 없는 권한이 필요합니다.</string>
+    <string name="toast_unable_open_activity">해당 액티비티를 열 수 없습니다.</string>
+
+    <string name="shortcut_not_supported">현재 런처에서 고정 바로가기를 지원하지 않습니다.</string>
+    <string name="shortcut_requested">홈 런처에 바로가기 요청을 보냈습니다.</string>
+    <string name="shortcut_failed">지금은 바로가기를 만들 수 없습니다.</string>
+
+    <string name="app_activity_count">액티비티 %1$d개</string>
+    <string name="app_match_count">일치 %1$d개</string>
+    <string name="activity_detail_permission_suffix"> - 권한 필요</string>
+    <string name="summary_apps_activities">앱 %1$d개 - 액티비티 %2$d개%3$s</string>
+    <string name="summary_updated_suffix"> - %1$s 업데이트</string>
+</resources>
